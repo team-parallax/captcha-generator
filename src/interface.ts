@@ -1,9 +1,7 @@
-export interface ICaptchaResponse {
-    svg: string
-    mp3: string
-    solution: string
-}
+import {ICaptchaResponse} from './captcha/interface';
 
 export interface IErrorResponse {
     message: string
 }
+
+export type ICaptchaRequest = ICaptchaResponse | IErrorResponse

@@ -31,7 +31,7 @@ it('should throw an error with an invalid language parameter', async () => {
 	/* Assert */
 	await expect(
 		createCaptcha(invalidLang),
-	).rejects.toThrow(`The requested language is not available: ${invalidLang}`);
+	).rejects.toThrow(`the language parameter is invalid: ${invalidLang}`);
 });
 
 it('should throw an error with an invalid speed parameter', async () => {
@@ -42,7 +42,7 @@ it('should throw an error with an invalid speed parameter', async () => {
 	/* Assert */
 	await expect(
 		createCaptcha(validLang, invalidSpeed),
-	).rejects.toThrow(`The set speed is not a valid number: ${invalidSpeed}`);
+	).rejects.toThrow(`the speed parameter is invalid: ${invalidSpeed}`);
 });
 
 it('should throw an error with an invalid gap parameter', async () => {
@@ -54,5 +54,5 @@ it('should throw an error with an invalid gap parameter', async () => {
 	/* Assert */
 	await expect(
 		createCaptcha(validLang, validSpeed, invalidGap),
-	).rejects.toThrow(`The set gap is not a valid number: ${invalidGap}`);
+	).rejects.toThrow(`the gap parameter is invalid: ${invalidGap}`);
 });

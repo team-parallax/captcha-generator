@@ -1,18 +1,23 @@
 import express, {Request, Response} from 'express';
-import {ICaptchaResponse, IErrorResponse} from './interface';
-import {createCaptcha, getAvailableLanguages} from './captcha';
+import {createCaptcha} from './captcha';
+import {availableLanguages} from './language';
+import {ICaptchaRequest} from './interface';
+import {ICaptchaQuery} from './captcha/interface';
 
 const app = express();
-app.use(express.json());
-
 const PORT = 8080;
 
-app.get('/captcha', async (req: Request, resp: Response<ICaptchaResponse | IErrorResponse>) => {
-	const lang = req.query.language as string;
-	const speed = req.query.speed as string;
-	const gap = req.query.gap as string;
+app.get('/captcha', async (
+	req: Request<{}, {}, {}, ICaptchaQuery>,
+	resp: Response<ICaptchaRequest>,
+) => {
+	const {
+		language,
+		speed,
+		gap,
+	} = req.query;
 	try {
-		const captcha = await createCaptcha(lang, speed, gap);
+		const captcha = await createCaptcha(language, speed, gap);
 		resp.send(captcha);
 	} catch (e: unknown) {
 		resp.status(400).send({
@@ -22,8 +27,7 @@ app.get('/captcha', async (req: Request, resp: Response<ICaptchaResponse | IErro
 });
 
 app.get('/languages', async (req: Request, resp: Response<string[]>) => {
-	const languages = await getAvailableLanguages();
-	resp.send(languages);
+	resp.send(availableLanguages);
 });
 
 app.listen(PORT, () => console.log(`listening on :${PORT}`));

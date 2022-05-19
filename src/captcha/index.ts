@@ -4,8 +4,12 @@ import fs from 'fs-extra';
 import {promisify} from 'util';
 import {exec} from 'child_process';
 import {ICaptchaResponse} from './interface';
+import {isValidLanguage} from '../language/';
+import {isNumberString} from '../util';
+import {InvalidCaptchaParameterError} from './error';
 
 const runCommand = promisify(exec);
+
 /**
  * Generate a captcha and return a response containing the captcha or throw an error if it fails
  * @param lang specifies the language used for the voice
@@ -21,17 +25,16 @@ export const createCaptcha = async (
 	const language = lang ?? 'en-us';
 	const sp = speed ?? '100';
 	const gp = gap ?? '10';
-	const languages = await getAvailableLanguages();
-	if (!languages.includes(language)) {
-		throw new Error(`The requested language is not available: ${language}`);
+	if (!isValidLanguage(language)) {
+		throw new InvalidCaptchaParameterError('language', language);
 	}
 
-	if (!/\d/g.test(sp)) {
-		throw new Error(`The set speed is not a valid number: ${sp}`);
+	if (!isNumberString(sp)) {
+		throw new InvalidCaptchaParameterError('speed', sp);
 	}
 
-	if (!/\d/g.test(gp)) {
-		throw new Error(`The set gap is not a valid number: ${gp}`);
+	if (!isNumberString(gp)) {
+		throw new InvalidCaptchaParameterError('gap', gp);
 	}
 
 	const id = uuid();
@@ -53,21 +56,10 @@ export const createCaptcha = async (
 	});
 	fs.removeSync(filename);
 	return {
+		id,
 		mp3: fileData,
 		svg: svgData,
 		solution,
 	};
 };
 
-/**
- * Return an array of all available languages for the voice
- * @return {Promise<string[]>} an array containing all available languages
- */
-export const getAvailableLanguages = async (): Promise<string[]> => {
-	const {stdout} = await runCommand('espeak-ng --voices');
-	return stdout
-		.split('\n')
-		.filter(l => l !== '')
-		.slice(1)
-		.map(l => l.split(' ').filter(w => w !== '')[1]);
-};
