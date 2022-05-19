@@ -5,7 +5,8 @@
         "jest/globals": true
     },
     "extends": [
-        "xo"
+        "xo",
+        "plugin:jest/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -14,7 +15,7 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "eslint-jest"
+        "jest"
     ],
     "rules": {
     }
