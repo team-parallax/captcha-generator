@@ -6,7 +6,8 @@
     "test": "jest",
     "start": "ts-node src/index.ts",
     "lint": "eslint ./src/**/*.ts --cache",
-    "lint:fix": "eslint ./src/**/*.ts --cache --fix"
+    "lint:fix": "eslint ./src/**/*.ts --cache --fix",
+    "docker:build": "docker build . -t captcha-generator"
   },
   "repository": {
     "type": "git",
