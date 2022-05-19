@@ -8,9 +8,9 @@ import {ICaptchaResponse} from './interface';
 const runCommand = promisify(exec);
 
 export const createCaptcha = async (
-	lang: string | undefined,
-	speed: string | undefined,
-	gap: string | undefined,
+	lang?: string,
+	speed?: string,
+	gap?: string,
 ): Promise<ICaptchaResponse> => {
 	const language = lang ?? 'en-us';
 	const sp = speed ?? '100';
@@ -25,7 +25,7 @@ export const createCaptcha = async (
 	}
 
 	if (!/\d/g.test(gp)) {
-		throw new Error(`The set gap is not a valid number: ${sp}`);
+		throw new Error(`The set gap is not a valid number: ${gp}`);
 	}
 
 	const id = uuid();
