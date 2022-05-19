@@ -2,3 +2,4 @@ node_modules/
 *.wav
 *.mp3
 .eslintcache
+.idea/*
