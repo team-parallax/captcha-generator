@@ -6,7 +6,13 @@ import {exec} from 'child_process';
 import {ICaptchaResponse} from './interface';
 
 const runCommand = promisify(exec);
-
+/**
+ * Generate a captcha and return a response containing the captcha or throw an error if it fails
+ * @param lang specifies the language used for the voice
+ * @param speed specifies the speed of the spoken words
+ * @param gap specifies the length of time between words
+ * @return {Promise<ICaptchaResponse>} contains the svg, mp3 and solution for the captcha
+ */
 export const createCaptcha = async (
 	lang?: string,
 	speed?: string,
@@ -53,6 +59,10 @@ export const createCaptcha = async (
 	};
 };
 
+/**
+ * Return an array of all available languages for the voice
+ * @return {Promise<string[]>} an array containing all available languages
+ */
 export const getAvailableLanguages = async (): Promise<string[]> => {
 	const {stdout} = await runCommand('espeak-ng --voices');
 	return stdout

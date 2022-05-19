@@ -1,40 +1,25 @@
 # captcha-generator
 
-## Available TTS engines
+## Installation
+Follow the following steps to install and use this repo:
+- clone the repo via `git clone` command
+- install dependencies in project with `pnpm i` command
+- run it using the `pnpm start` command
 
-### espeak
-- stagnant develop
-- GPL3
+## Docker
+TBD
 
-### espeak-ng
-- updated fork of `espeak`
-- GPL3
+## Routes
+There are 2 basic routes so far:  
 
-### festival
-- unrestricted license
-- low amount of preinstalled languages
-- german language via IMS no longer available
+### `/createCaptcha`  
+Creates a captcha with the specified parameters
+There are 3 optional parameters:
+- `?language=` specifies the language the voice should use
+- `?speed=` specifies the spoken words by the voice
+- `?gap=` specifies the length of time between words  
+Since the captcha consists of random letters, they are each spoken one at a time by the voice.
+  
 
-
-# Task
-
-Create Docker image with PHP which serves a captcha `SVG` and respective `Audio` and its respective solution (`code`)
-
-the PHP script should be able to serve to a simple http-get request with a JSON like this:
-```
-{
-  data: {
-    svg: <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"150\" height=\"50\" viewBox=\"0,0,150,50\"><path fill=\"#333\" d=\"M130.85 21.55L130.84 21.55L130.82 ..." />,
-    mp3: "base64-code",
-    solution: "abcdef"
-  }
-}
-```
-
-the get request should have the following query parameters:
-```
-language=de
-```
-depending on this, the audio is played with a speaker of that language.
-
-use [this library](https://captcha.com/php-captcha.html)
+### `/languages`  
+Displays a list of all available languages for the captcha voice
