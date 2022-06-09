@@ -15,9 +15,10 @@ app.get('/captcha', async (
 		language,
 		speed,
 		gap,
+		length,
 	} = req.query;
 	try {
-		const captcha = await createCaptcha(language, speed, gap);
+		const captcha = await createCaptcha(language, speed, gap, length);
 		resp.send(captcha);
 	} catch (e: unknown) {
 		resp.status(400).send({

@@ -9,4 +9,5 @@ export interface ICaptchaQuery {
     language?: string
     speed?: string
     gap?: string
+    length?: number
 }

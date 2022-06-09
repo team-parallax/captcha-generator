@@ -21,12 +21,14 @@ export const createCaptcha = async (
 	lang?: string,
 	speed?: string,
 	gap?: string,
+	length?: number,
 ): Promise<ICaptchaResponse> => {
 	const id = uuid();
 	const language = lang ?? 'en-us';
 	const sp = speed ?? '100';
 	const gp = gap ?? '10';
-	console.log(`generating captcha: ${id} (lang: ${language}, speed: ${sp}, gap:${gp})`);
+	const lg = length ?? 6;
+	console.log(`generating captcha: ${id} (length: ${lg}, lang: ${language}, speed: ${sp}, gap:${gp})`);
 
 	if (!isValidLanguage(language)) {
 		throw new InvalidCaptchaParameterError('language', language);
@@ -40,13 +42,15 @@ export const createCaptcha = async (
 		throw new InvalidCaptchaParameterError('gap', gp);
 	}
 
-	const cap = captcha.create();
+	const cap = captcha.create({
+		size: lg,
+	});
 	const {
 		data: svgData,
 		text: solution,
 	} = cap;
 	const withSpaces = solution.split('').join(' ');
-	const filename = `${id}.mp3`;
+	const filename = `${id}.wav`;
 
 	await runCommand(
 		`espeak-ng "${withSpaces}" -w ${filename} -v ${language} -s ${sp} -g ${gp}`,
@@ -56,8 +60,18 @@ export const createCaptcha = async (
 		throw new Error('failed to create captcha audio');
 	}
 
-	const fileData = readAsString(filename);
+	const convertedFilename = `${id}.mp3`;
+	await runCommand(
+		`ffmpeg -i ${filename} ${convertedFilename}`,
+	);
+
+	if (!fs.existsSync(convertedFilename)) {
+		throw new Error('failed to convert captcha audio');
+	}
+
+	const fileData = readAsString(convertedFilename);
 	fs.removeSync(filename);
+	fs.removeSync(convertedFilename);
 	return {
 		id,
 		mp3: fileData,
