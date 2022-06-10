@@ -42,6 +42,10 @@ export const createCaptcha = async (
 		throw new InvalidCaptchaParameterError('gap', gp);
 	}
 
+	if (lg <= 0) {
+		throw new InvalidCaptchaParameterError('length', lg);
+	}
+
 	const cap = captcha.create({
 		size: lg,
 	});
